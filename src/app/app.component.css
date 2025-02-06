@@ -1,0 +1,7 @@
+.example-form {
+  width: 50%;
+}
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
