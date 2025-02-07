@@ -4,18 +4,16 @@
       <mat-label>Title</mat-label>
       <input matInput [formControl]="taskControl" />
     </mat-form-field>
-    <button mat-fab extended (click)="addTask()">
+    <button mat-fab extended (click)="addTodo()">
       <mat-icon>add</mat-icon>
       Add
     </button>
   </form>
 
   <mat-list>
-    <mat-list-item *ngFor="let task of tasks; let i = index">
-      <span [class.completed]="task.completed" (click)="toggleTask(i)">{{
-        task.name
-      }}</span>
-      <button mat-icon-button color="warn" (click)="deleteTask(i)">
+    <mat-list-item *ngFor="let task of todos; let i = index">
+      <span [class.completed]="task.completed">{{ task.todoTitle }}</span>
+      <button mat-icon-button color="warn" (click)="deleteTodo(task.id)">
         <mat-icon fontIcon="close"></mat-icon>
       </button>
     </mat-list-item>

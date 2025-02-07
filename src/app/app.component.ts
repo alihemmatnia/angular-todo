@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,6 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { TodoManager } from '../services/todo.service';
+import { Todo } from '../models/Todo';
 
 @Component({
   selector: 'app-root',
@@ -27,27 +28,34 @@ import { TodoManager } from '../services/todo.service';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'todo-app';
-  tasks: { name: string; completed: boolean }[] = [];
+  todos: Todo[] = [];
   taskControl = new FormControl('');
   todoService: TodoManager = inject(TodoManager);
 
-  addTask() {
+  constructor() {
+    this.getTodos();
+  }
+
+  addTodo() {
     if (this.taskControl.value?.trim()) {
-      this.tasks.push({ name: this.taskControl.value, completed: false });
+      this.todoService.addTodo({
+        todoTitle: this.taskControl.value,
+        completed: false,
+        id: '',
+      });
+      this.getTodos();
       this.taskControl.reset();
     }
   }
 
-  toggleTask(index: number) {
-    this.tasks[index].completed = !this.tasks[index].completed;
-  }
-
-  deleteTask(index: number) {
-    this.tasks.splice(index, 1);
-  }
-
   getTodos() {
-    this.todoService.getTodos();
+    this.todoService.getTodos().subscribe((res: Todo[]) => {
+      this.todos = res;
+    });
+  }
+
+  deleteTodo(id: string) {
+    this.todoService.deleteTodo(id);
+    this.getTodos();
   }
 }
